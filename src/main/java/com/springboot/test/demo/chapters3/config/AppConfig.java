@@ -23,7 +23,7 @@ public class AppConfig {
     }
     */
     @Bean(name = "dataSource")
-    public  DataSource getDataSource() {
+    public DataSource getDataSource() {
         Properties props = new Properties();
         props.setProperty("driver", "com.mysql.jdbc.Driver");
         props.setProperty("url", "jdbc:mysql://localhost:3306/guns");
