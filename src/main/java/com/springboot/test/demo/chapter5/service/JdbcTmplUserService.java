@@ -7,6 +7,10 @@ import java.util.List;
 public interface JdbcTmplUserService {
      User getUser(Long id);
 
+     User getUser2(Long id);
+
+     User getUser3(Long id);
+
      List<User> findUsers(String userName,String note);
 
      int insertUser(User user);

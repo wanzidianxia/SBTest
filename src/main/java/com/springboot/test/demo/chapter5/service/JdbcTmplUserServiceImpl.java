@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.List;
 
 public class JdbcTmplUserServiceImpl implements JdbcTmplUserService {
@@ -36,6 +39,56 @@ public class JdbcTmplUserServiceImpl implements JdbcTmplUserService {
     }
 
     @Override
+    public User getUser2(Long id) {
+        User result = this.jdbcTemplate.execute((Statement smt) -> {
+            String sql1 = "select count(*)  total from t_user where  id=" + id;
+            ResultSet rs1 = smt.executeQuery(sql1);
+            while (rs1.next()) {
+                int total = rs1.getInt("total");
+                System.out.println(total);
+            }
+            String sql2 = "select  id,user_name,sex,note  from t_user"
+                    + " where  id=" + id;
+            ResultSet rs2 = smt.executeQuery(sql2);
+            User user = null;
+            while (rs2.next()) {
+                int rowNum = rs2.getRow();
+                user = getUserRowMapper().mapRow(rs2, rowNum);
+            }
+            return user;
+
+        });
+        return result;
+    }
+
+    @Override
+    public User getUser3(Long id) {
+        return this.jdbcTemplate.execute((Connection conn) -> {
+            String sql1 = "select count(*)  total from t_user where  id=?";
+            PreparedStatement ps1 = conn.prepareStatement(sql1);
+            ps1.setLong(1, id);
+            ResultSet rs1 = ps1.executeQuery();
+            while (rs1.next()) {
+                System.out.println(rs1.getInt("total"));
+            }
+            String sql2 = "select  id,user_name,sex,note  from t_user"
+                    + " where  id=?";
+            PreparedStatement ps2 = conn.prepareStatement(sql2);
+            ps2.setLong(1, id);
+            ResultSet rs2 = ps2.executeQuery();
+            User user = null;
+            while (rs2.next()) {
+                int rowNum = rs2.getRow();
+                user = getUserRowMapper().mapRow(rs2, rowNum);
+            }
+            return user;
+
+        });
+
+    }
+
+
+    @Override
     public List<User> findUsers(String userName, String note) {
         String sql = "select id,user_name,sex,note from t_user "
                 + "where user_name like concat('%',?,'%')"
@@ -62,7 +115,7 @@ public class JdbcTmplUserServiceImpl implements JdbcTmplUserService {
 
     @Override
     public int deleteUser(Long id) {
-        String sql = "delete from t user where id=?";
+        String sql = "delete from t_user where id=?";
         return jdbcTemplate.update(sql, id);
     }
 }

@@ -1,25 +1,26 @@
 package com.springboot.test.demo.chapter5.pojo;
 
+import com.springboot.test.demo.chapter5.converter.SexConverter;
 import com.springboot.test.demo.chapter5.enumeration.SexEnum;
 
+import javax.persistence.*;
+
+//标明是一个实体类
+@Entity(name = "user")
+//定义映射的表
+@Table(name = "t_user")
 public class User {
-
-
-    private Long id;
-
-    private String userName;
-
-    public SexEnum getSex() {
-        return sex;
-    }
-
-    public void setSex(SexEnum sex) {
-        this.sex = sex;
-    }
-
+    //标明主键
+    @Id
+    //主键策略，递增
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id = null;
+    //定义属性和表的映射关系
+    @Column(name = "user_name")
+    private String userName = null;
+    private String note = null;
+    @Convert(converter = SexConverter.class)
     private SexEnum sex = null;
-
-    private String note;
 
     public Long getId() {
         return id;
@@ -45,4 +46,11 @@ public class User {
         this.note = note;
     }
 
+    public SexEnum getSex() {
+        return sex;
+    }
+
+    public void setSex(SexEnum sex) {
+        this.sex = sex;
+    }
 }
