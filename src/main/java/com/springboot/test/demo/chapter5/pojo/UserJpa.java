@@ -1,14 +1,25 @@
 package com.springboot.test.demo.chapter5.pojo;
 
+import com.springboot.test.demo.chapter5.converter.SexConverter;
 import com.springboot.test.demo.chapter5.enumeration.SexEnum;
-import org.apache.ibatis.type.Alias;
 
-@Alias(value = "user")
-public class User {
+import javax.persistence.*;
 
+//标明是一个实体类
+@Entity(name = "user")
+//定义映射的表
+@Table(name = "t_user")
+public class UserJpa {
+    //标明主键
+    @Id
+    //主键策略，递增
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id = null;
+    //定义属性和表的映射关系
+    @Column(name = "user_name")
     private String userName = null;
     private String note = null;
+    @Convert(converter = SexConverter.class)
     private SexEnum sex = null;
 
     public Long getId() {
