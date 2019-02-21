@@ -16,6 +16,8 @@ public class MyBatisController {
     @RequestMapping("/getUser")
     @ResponseBody
     public User getUser(Long id) {
-        return myBatisUserService.getUser(id);
+
+        User user = myBatisUserService.getUser(id);
+        return user;
     }
 }
